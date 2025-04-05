@@ -1,6 +1,8 @@
+import { DesignByFooter } from "@/components/DesignByFooter";
 import ComponentCard from "@/components/common/ComponentCard";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import BasicTableOne from "@/components/tables/BasicTableOne";
+import BasicTableTwo from "@/components/tables/BasicTableTwo";
 import { Metadata } from "next";
 import React from "react";
 
@@ -14,12 +16,13 @@ export const metadata: Metadata = {
 export default function BasicTables() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Basic Table" />
+      <PageBreadcrumb pageTitle="Transaction Details" />
       <div className="space-y-6">
-        <ComponentCard title="Basic Table 1">
-          <BasicTableOne />
+        <ComponentCard title="View and manage tranaction details of the user">
+          <BasicTableTwo />
         </ComponentCard>
       </div>
+      {/* <DesignByFooter variant="designed" link="https://www.onggy.com/" /> */}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import logoIcon from '../../../assets/BP_LOGO.jpg'
 
 export default function AuthLayout({
   children,
@@ -23,14 +24,14 @@ export default function AuthLayout({
               <div className="flex flex-col items-center max-w-xs">
                 <Link href="/" className="block mb-4">
                   <Image
-                    width={231}
+                    width={100}
                     height={48}
-                    src="./images/logo/auth-logo.svg"
+                    src={logoIcon}
                     alt="Logo"
                   />
                 </Link>
                 <p className="text-center text-gray-400 dark:text-white/60">
-                  Free and Open-Source Tailwind CSS Admin Dashboard Template
+                  BP law Admin Panel
                 </p>
               </div>
             </div>
