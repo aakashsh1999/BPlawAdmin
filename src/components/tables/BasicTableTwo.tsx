@@ -192,21 +192,21 @@ export default function BasicTableTwo() {
 
               {loading && (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-4 text-center text-gray-500 dark:text-gray-400">
+                  <TableCell  className="px-2 w-full py-4  text-gray-500 dark:text-gray-400">
                     Loading more transactions...
                   </TableCell>
                 </TableRow>
               )}
               {error && (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-4 text-center text-red-500">
+                  <TableCell className="px-2 py-4  text-red-500">
                     {error}
                   </TableCell>
                 </TableRow>
               )}
               {transactions.length > PAGE_SIZE && !loading && lastDoc && (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-4 text-center">
+                  <TableCell  className="py-4 text-center">
                     <Button onClick={handleLoadMore} variant="outline" size="sm">
                       Load More
                     </Button>
@@ -215,7 +215,7 @@ export default function BasicTableTwo() {
               )}
               {transactions.length === 0 && !loading && !error && (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-4 text-center text-gray-500 dark:text-gray-400">
+                  <TableCell className="px-2 py-4 text-gray-500 dark:text-gray-400">
                     No transactions found.
                   </TableCell>
                 </TableRow>

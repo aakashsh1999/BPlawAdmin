@@ -16,10 +16,11 @@ export default function SignInForm() {
   const router = useRouter();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    // Check if running in a browser environment before accessing localStorage
+    if (typeof window !== 'undefined' && localStorage.getItem("token")) {
       router.push("/");
     }
-  }, []);
+  }, [router]); // Added router dependency to useEffect
 
   // Formik setup
   const formik = useFormik({
@@ -38,15 +39,21 @@ export default function SignInForm() {
     onSubmit: async (values) => {
       setIsLoading(true);
       try {
+        // Simulate API call or authentication check
+        // In a real app, replace this with an actual API call
         if (values.email === "admin@bplaw.com" && values.password === "admin@123") {
-          localStorage.setItem("token", "user-authenticated");
-          toast.success("User logged in successfully");
-          router.push("/");
+           // Check if running in a browser environment before accessing localStorage
+          if (typeof window !== 'undefined') {
+            localStorage.setItem("token", "user-authenticated");
+            toast.success("User logged in successfully");
+            router.push("/");
+          }
         } else {
           toast.error("Invalid email or password");
         }
       } catch (error) {
-        toast.error("Something went wrong");
+         console.error("Login error:", error); // Log the actual error
+         toast.error("An unexpected error occurred. Please try again."); // More user-friendly message
       } finally {
         setIsLoading(false);
       }
@@ -79,51 +86,61 @@ export default function SignInForm() {
             <div className="space-y-6">
               {/* Email Field */}
               <div>
-                <Label>Email <span className="text-error-500">*</span></Label>
+                {/* Use htmlFor for accessibility, linking label to input */}
+                <Label htmlFor="email">Email <span className="text-error-500">*</span></Label>
                 <Input
+                  id="email" // Add id matching the label's htmlFor
                   name="email"
                   type="email"
                   placeholder="info@gmail.com"
-                  value={formik.values.email}
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
+                  // Add aria-describedby for errors if needed
                 />
                 {formik.touched.email && formik.errors.email ? (
-                  <p className="text-sm text-red-500">{formik.errors.email}</p>
+                  <p className="text-sm text-red-500" id="email-error"> {/* Optional id for aria-describedby */}
+                    {formik.errors.email}
+                  </p>
                 ) : null}
               </div>
 
               {/* Password Field */}
               <div>
-                <Label>Password <span className="text-error-500">*</span></Label>
+                 {/* Use htmlFor for accessibility */}
+                <Label htmlFor="password">Password <span className="text-error-500">*</span></Label>
                 <div className="relative">
                   <Input
+                    id="password" // Add id matching the label's htmlFor
                     name="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    value={formik.values.password}
                     onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                     // Add aria-describedby for errors if needed
                   />
-                  <span
+                  {/* Use a button for interactive elements */}
+                  <button
+                    type="button" // Prevent form submission
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                    className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2 p-1" // Added padding for easier click
+                    aria-label={showPassword ? "Hide password" : "Show password"} // Accessibility label
                   >
                     {showPassword ? (
-                      <EyeIcon className="fill-gray-500 dark:fill-gray-400" />
+                      <EyeIcon className="fill-gray-500 dark:fill-gray-400 w-5 h-5" /> // Example size
                     ) : (
-                      <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400" />
+                      <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 w-5 h-5" /> // Example size
                     )}
-                  </span>
+                  </button>
                 </div>
                 {formik.touched.password && formik.errors.password ? (
-                  <p className="text-sm text-red-500">{formik.errors.password}</p>
+                  <p className="text-sm text-red-500" id="password-error"> {/* Optional id for aria-describedby */}
+                    {formik.errors.password}
+                  </p>
                 ) : null}
               </div>
 
               {/* Submit Button */}
               <div>
-                <Button type="submit" className="w-full" size="sm" disabled={isLoading}>
+                <Button className="w-full" size="sm" disabled={isLoading || !formik.isValid || !formik.dirty}>
+                  {/* More informative loading state and disable logic */}
                   {isLoading ? "Signing in..." : "Sign in"}
                 </Button>
               </div>

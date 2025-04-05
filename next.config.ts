@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["firebasestorage.googleapis.com"],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,

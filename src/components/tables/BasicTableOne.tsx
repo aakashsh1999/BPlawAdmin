@@ -255,7 +255,7 @@ export default function BasicTableOne() {
                           ? "success"
                           : lawyer.isApproved === false
                           ? "warning"
-                          : "default"
+                          : "error"
                       }
                     >
                       {lawyer.isApproved ? "Approved" : "Pending"}
@@ -287,21 +287,21 @@ export default function BasicTableOne() {
               ))}
               {loading && (
                 <TableRow>
-                  <TableCell colSpan={8} className="py-4 text-center text-gray-500 dark:text-gray-400">
+                  <TableCell className=" px-4 w-full py-4  text-gray-500 dark:text-gray-400">
                     Loading more lawyers...
                   </TableCell>
                 </TableRow>
               )}
               {error && (
                 <TableRow>
-                  <TableCell colSpan={8} className="py-4 text-center text-red-500">
+                  <TableCell  className=" px-4 py-4 text-red-500">
                     {error}
                   </TableCell>
                 </TableRow>
               )}
               {lawyers.length > 0 && !loading && lastDoc && (
                 <TableRow>
-                  <TableCell colSpan={8} className="py-4 text-center">
+                  <TableCell  className="py-4 text-center">
                     <Button onClick={handleLoadMore} variant="outline" size="sm">
                       Load More
                     </Button>
@@ -309,8 +309,8 @@ export default function BasicTableOne() {
                 </TableRow>
               )}
               {lawyers.length === 0 && !loading && !error && (
-                <TableRow>
-                  <TableCell colSpan={8} className="py-4 text-center text-gray-500 dark:text-gray-400">
+                <TableRow >
+                  <TableCell className=" px-4 w-full py-4 text-gray-500 dark:text-gray-400">
                     No lawyer details found.
                   </TableCell>
                 </TableRow>
