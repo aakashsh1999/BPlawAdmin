@@ -20,7 +20,7 @@ import {
   UserIcon,
 } from "../icons/index";
 import SidebarWidget from "./SidebarWidget";
-import { Banknote } from 'lucide-react';
+import { Banknote, Newspaper } from 'lucide-react';
 import logo from '../assets/BP_LOGO.jpg'
 import { DesignByFooter } from "@/components/DesignByFooter";
 
@@ -46,6 +46,11 @@ const navItems: NavItem[] = [
     name: "Transaction Details",
     icon:  <Banknote/> ,
  path: "/transaction-details",
+  },
+  {
+    name: "News and Blogs",
+    icon:  <Newspaper/> ,
+ path: "/news",
   },
   // {
   //   icon: <UserCircleIcon />,

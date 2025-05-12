@@ -18,7 +18,7 @@ export default function BasicTables() {
     <div>
       <PageBreadcrumb pageTitle="Transaction Details" />
       <div className="space-y-6">
-        <ComponentCard title="View and manage tranaction details of the user">
+        <ComponentCard title="View and manage transaction details of the user">
           <BasicTableTwo />
         </ComponentCard>
       </div>
