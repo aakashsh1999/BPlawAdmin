@@ -33,10 +33,11 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    icon: <GridIcon />,
-    name: "Dashboard",
+    name: "News and Blogs",
+    icon:  <Newspaper/> ,
  path: "/",
   },
+
   {
     name: "Lawyers Details",
     icon: <UserIcon />,
@@ -47,11 +48,7 @@ const navItems: NavItem[] = [
     icon:  <Banknote/> ,
  path: "/transaction-details",
   },
-  {
-    name: "News and Blogs",
-    icon:  <Newspaper/> ,
- path: "/news",
-  },
+
   // {
   //   icon: <UserCircleIcon />,
   //   name: "User Profile",

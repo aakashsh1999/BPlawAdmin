@@ -13,7 +13,7 @@ import { TagInput } from "@/components/tag-input";
 import { ImageUpload } from "@/components/image-upload";
 import { useToast } from "@/hooks/use-toast";
 
-const BlogEditorComponent = ({ onClose }: { onClose?: () => void }) => {
+const BlogEditorComponent = ({ onClose,onsaveSuccess }: { onClose?: () => void, onsaveSuccess?: () => void }) => {
   const router = useRouter();
   const { toast } = useToast();
 
@@ -90,7 +90,7 @@ const BlogEditorComponent = ({ onClose }: { onClose?: () => void }) => {
           name: "Admin",
         },
         tags: selectedTags,
-        coverImageUrl: coverImageUrl || undefined, // Include the URL if available
+        coverImageUrl: coverImageUrl || "", // Include the URL if available
       };
 
       // Pass the File object for upload, if it exists
@@ -99,6 +99,7 @@ const BlogEditorComponent = ({ onClose }: { onClose?: () => void }) => {
         coverImageFile || null // Pass the File object, or null if no new file
       );
 
+      onsaveSuccess?.()
       toast({
         title: "Post created!",
         description: "Your blog post has been published successfully.",
@@ -120,7 +121,7 @@ const BlogEditorComponent = ({ onClose }: { onClose?: () => void }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex  bg-gray-50 w-full">
       <form onSubmit={handleSubmit}>
         <Card className="mb-6">
           <CardContent className="pt-6">
@@ -142,7 +143,7 @@ const BlogEditorComponent = ({ onClose }: { onClose?: () => void }) => {
 
               <div>
                 <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-1">
-                  Excerpt <span className="text-red-500">*</span>
+                  Description <span className="text-red-500">*</span>
                 </label>
                 <Textarea
                   id="excerpt"

@@ -4,17 +4,18 @@ import BlogEditor from ".";
 import BlogEditorComponent from "./BlogEditorComponent";
 interface BlogEditorModalProps {
   isOpen: boolean;
+  onsaveSuccess?: () => void;
   onClose: () => void;
 }
 
-const BlogEditorModal: React.FC<BlogEditorModalProps> = ({ isOpen, onClose }) => {
+const BlogEditorModal: React.FC<BlogEditorModalProps> = ({ isOpen, onClose, onsaveSuccess }) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl overflow-y-auto max-h-[80vh] bg-white">
+    <Dialog open={isOpen} onOpenChange={onClose} >
+      <DialogContent className="w-full overflow-y-auto max-h-[80vh] bg-white">
         <DialogHeader>
           <DialogTitle>Create a news or blog</DialogTitle>
         </DialogHeader>
-        <BlogEditorComponent onClose={onClose} />
+        <BlogEditorComponent onClose={onClose} onsaveSuccess={onsaveSuccess} />
       </DialogContent>
     </Dialog>
   );

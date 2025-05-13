@@ -35,13 +35,20 @@ interface BlogPost {
 
 const PAGE_SIZE = 10;
 
-export default function BlogTable() {
+export default function NewsTable({
+  refreshRequired ,
+  setRefreshRequired,
+}:{
+  refreshRequired: boolean,
+  setRefreshRequired: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+
 
   const fetchPosts = async (nextPage = false) => {
     setLoading(true);
@@ -53,12 +60,19 @@ export default function BlogTable() {
 
       if (nextPage && lastDoc) {
         q = query(postsRef, orderBy("createdAt"), startAfter(lastDoc), limit(PAGE_SIZE));
+      } else if (!nextPage && posts.length > 0 && lastDoc) {
+        // If not loading the next page, and we have posts and lastDoc,
+        // we might be refreshing the current view. Re-fetch from the beginning.
+         q = query(postsRef, orderBy("createdAt"), limit(PAGE_SIZE));
       }
+
 
       const querySnapshot = await getDocs(q);
       const fetchedPosts = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
+        // Ensure createdAt is a Timestamp if it's not already
+        createdAt: doc.data().createdAt instanceof Timestamp ? doc.data().createdAt : Timestamp.fromDate(new Date(doc.data().createdAt.seconds * 1000))
       })) as BlogPost[];
 
       setPosts((prevPosts) =>
@@ -73,12 +87,13 @@ export default function BlogTable() {
       console.error("Error fetching blog posts:", err);
     } finally {
       setLoading(false);
+      setRefreshRequired(false); // Reset refresh required flag
     }
   };
 
   useEffect(() => {
     fetchPosts(false);
-  }, []);
+  }, [refreshRequired]); // Depend on refreshRequired
 
   const handleLoadMore = () => {
     if (lastDoc) {
@@ -86,7 +101,6 @@ export default function BlogTable() {
     }
   };
 
-  console.log(posts, 'ss')
   const formatDate = (timestamp: Timestamp | undefined): string => {
     if (!timestamp) {
       return "";
@@ -108,20 +122,30 @@ export default function BlogTable() {
     try {
       await deleteBlogPost(postId);
       toast.success("Post deleted successfully");
-      
+      setPosts(posts.filter(post => post.id !== postId));
     } catch (error) {
-      alert("Failed to delete post");
+      toast.error("Failed to delete post");
+      console.error("Error deleting post:", error);
     }
   };
 
+  // Callback function to be called after a successful edit
+  const handlePostEdited = () => {
+    setIsEditModalOpen(false); // Close the modal
+    setRefreshRequired(true);
+    toast.success("Post updated successfully");
+  };
+
+
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <div className="max-w-full overflow-x-auto">\
+      <div className="max-w-full overflow-x-auto">
       <BlogEditableModal
-  isOpen={isEditModalOpen}
-  onClose={() => setIsEditModalOpen(false)}
-  post={selectedPost}
-/>
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        post={selectedPost}
+        onSaveSuccess={handlePostEdited} // Pass the callback here
+      />
         <div className="min-w-[1000px]">
           <Table>
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
@@ -188,33 +212,39 @@ export default function BlogTable() {
                   </TableCell>
 
                   <TableCell className="px-4 flex gap-x-2 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    <EditIcon className="hover:text-red-300 cursor-pointer"   onClick={() => {
-    setSelectedPost(post);
-    setIsEditModalOpen(true);
-  }}/>
-  <Trash2 className="text-red-500 cursor-pointer"   onClick={() => {
-    deletPost(post.id);
-  }}/>
+                    <EditIcon
+                      className="hover:text-red-300 cursor-pointer"
+                      onClick={() => {
+                        setSelectedPost(post);
+                        setIsEditModalOpen(true);
+                      }}
+                    />
+                    <Trash2
+                      className="text-red-500 cursor-pointer"
+                      onClick={() => {
+                        deletPost(post.id);
+                      }}
+                    />
                   </TableCell>
-                  
+
                 </TableRow>
               ))}
 
               {loading && (
                 <TableRow>
-                  <TableCell className="px-2 w-full py-4  text-gray-500 dark:text-gray-400">
-                    Loading more posts...
+                  <TableCell  className="px-2 w-full py-4 text-center text-gray-500 dark:text-gray-400">
+                    Loading{posts.length > 0 ? " more" : ""} posts...
                   </TableCell>
                 </TableRow>
               )}
               {error && (
                 <TableRow>
-                  <TableCell className="px-2 py-4  text-red-500">
+                   <TableCell className="px-2 py-4 text-center text-red-500">
                     {error}
                   </TableCell>
                 </TableRow>
               )}
-              {posts.length > PAGE_SIZE && !loading && lastDoc && (
+               {posts.length > 0 && !loading && lastDoc && (
                 <TableRow>
                   <TableCell className="py-4 text-center">
                     <Button onClick={handleLoadMore} variant="outline" size="sm">
@@ -225,7 +255,7 @@ export default function BlogTable() {
               )}
               {posts.length === 0 && !loading && !error && (
                 <TableRow>
-                  <TableCell className="px-2 py-4 text-gray-500 dark:text-gray-400">
+                   <TableCell className="px-2 py-4 text-center text-gray-500 dark:text-gray-400">
                     No posts found.
                   </TableCell>
                 </TableRow>

@@ -33,9 +33,11 @@ const availableTags = [
 export const BlogEditComponent = ({
   post,
   onClose,
+  onSaveSuccess
 }: {
   post: BlogPost;
   onClose?: () => void;
+  onSaveSuccess?: () => void;
 }) => {
   const { toast } = useToast();
 
@@ -60,9 +62,7 @@ export const BlogEditComponent = ({
 
   const handleFileSelect = (file: File | null) => {
     setCoverImageFile(file);
-    // If a new file is selected, we don't immediately update coverImageUrl,
-    // as the upload needs to happen in handleSubmit.
-    setCoverImageUrl(null); // Clear any previously selected URL when a new file is chosen
+    setCoverImageUrl(null); 
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -91,13 +91,11 @@ export const BlogEditComponent = ({
           keywords,
         },
         coverImageFile, // Pass the File object for upload
-        coverImageUrl === post.coverImageUrl ? null : coverImageUrl // Pass new URL if it's different from the original
+        coverImageUrl === post.coverImageUrl ? "" : coverImageUrl // Pass new URL if it's different from the original
       );
 
-      toast({
-        title: "Post updated",
-        description: "Your changes have been saved.",
-      });
+    
+      onSaveSuccess?.()
 
       onClose?.();
     } catch (error) {

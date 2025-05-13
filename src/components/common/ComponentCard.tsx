@@ -2,8 +2,6 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { usePathname } from "next/navigation";
-import BlogEditor from "../BlogEditor.tsx/BlogEditorComponent";
-import BlogEditorClient from "@/app/(admin)/(others-pages)/news/client";
 import AddBlogModal from "../BlogEditor.tsx";
 
 interface ComponentCardProps {
@@ -11,6 +9,7 @@ interface ComponentCardProps {
   children: React.ReactNode;
   className?: string; // Additional custom classes for styling
   desc?: string; // Description text
+  onsaveSuccess?: () => void;
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
@@ -18,6 +17,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   children,
   className = "",
   desc = "",
+  onsaveSuccess
 }) => {
 
   const pathname = usePathname()
@@ -37,8 +37,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
           </p>
         )}
         </div>
-        {pathname.includes("news") &&<AddBlogModal/>
-          }
+        {pathname === "/" && <AddBlogModal onsaveSuccess={onsaveSuccess} />}        
       </div>
 
       {/* Card Body */}

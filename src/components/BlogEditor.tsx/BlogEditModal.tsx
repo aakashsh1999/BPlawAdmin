@@ -13,11 +13,13 @@ interface BlogEditableModalProps {
   isOpen: boolean;
   onClose: () => void;
   post: BlogPost | null; // You need to pass the post to edit
+  onSaveSuccess: () => void;
 }
 
 const BlogEditableModal: React.FC<BlogEditableModalProps> = ({
   isOpen,
   onClose,
+  onSaveSuccess,
   post,
 }) => {
   if (!post) return null; // Prevent rendering if no post is provided
@@ -28,7 +30,7 @@ const BlogEditableModal: React.FC<BlogEditableModalProps> = ({
         <DialogHeader>
           <DialogTitle>Edit Blog Post</DialogTitle>
         </DialogHeader>
-        <BlogEditComponent post={post} onClose={onClose} />
+        <BlogEditComponent post={post} onClose={onClose} onSaveSuccess={onSaveSuccess} />
       </DialogContent>
     </Dialog>
   );
